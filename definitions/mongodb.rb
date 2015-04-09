@@ -218,7 +218,6 @@ define :mongodb_instance,
       :node,
       "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
        mongodb_is_replicaset:true AND \
-       mongodb_shard_name:#{new_resource.replicaset['mongodb']['shard_name']} AND \
        chef_environment:#{new_resource.replicaset.chef_environment}"
     )
 
