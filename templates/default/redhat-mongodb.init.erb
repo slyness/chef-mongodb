@@ -56,7 +56,7 @@ start()
 stop()
 {
   echo -n $"Stopping <%= @provides %>: "
-  killproc -p "$PIDFILE" -d 300 $DAEMON
+  kill -9 `pidof $DAEMON`
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
