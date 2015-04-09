@@ -13,6 +13,8 @@ NAME=<%= @provides %>
 SYSCONFIG=<%= @sysconfig_file %>
 DAEMON_USER=mongod
 ENABLE_MONGODB=yes
+MONGO_USER=mongod
+MONGO_GROUP=mongod
 
 SUBSYS_LOCK_FILE=/var/lock/subsys/<%= @provides %>
 
@@ -25,6 +27,7 @@ fi
 # for now.  This can go away when this script stops supporting 1.8.
 DBPATH=`awk -F= '/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
 PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+PIDDIR=`dirname $PIDFILEPATH`
 
 # Handle NUMA access to CPUs (SERVER-3574)
 # This verifies the existence of numactl as well as testing that the command works
@@ -38,6 +41,11 @@ fi
 
 start()
 {
+  # Make sure the default pidfile directory exists
+  if [ ! -d $PIDDIR ]; then
+    install -d -m 0755 -o $MONGO_USER -g $MONGO_GROUP $PIDDIR
+  fi
+
   echo -n $"Starting <%= @provides %>: "
   daemon --user "$DAEMON_USER" $NUMACTL $DAEMON $DAEMON_OPTS
   RETVAL=$?
@@ -48,11 +56,7 @@ start()
 stop()
 {
   echo -n $"Stopping <%= @provides %>: "
-  if test "x$PIDFILE" != "x"; then
-    killproc -p $PIDFILE -d 300 $DAEMON
-  else
-    killproc -d 300 $DAEMON
-  fi
+  killproc -p "$PIDFILE" -d 300 $DAEMON
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
