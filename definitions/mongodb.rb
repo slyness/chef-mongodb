@@ -188,7 +188,6 @@ define :mongodb_instance,
       :dbconfig_file  => new_resource.dbconfig_file,
       :sysconfig_file => new_resource.sysconfig_file,
       :replicaset =>     new_resource.replicaset_name,
-      :config =>         new_resource.config,
       :ulimit =>         new_resource.ulimit,
       :bind_ip =>        new_resource.bind_ip,
       :port =>           new_resource.port

@@ -56,7 +56,7 @@ start()
 stop()
 {
   echo -n $"Stopping <%= @provides %>: "
-  $DAEMON --replSet <%= @replicaset %> --config <%= @config %> --shutdown
+  $DAEMON --replSet <%= @replicaset %> --config <%= @dbconfig_file %> --shutdown
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
