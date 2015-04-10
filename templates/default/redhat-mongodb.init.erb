@@ -56,7 +56,7 @@ start()
 stop()
 {
   echo -n $"Stopping <%= @provides %>: "
-  kill -9 `pidof $DAEMON`
+  $DAEMON --replSet <%= @replicaset %> --config <%= @config %> --shutdown
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
