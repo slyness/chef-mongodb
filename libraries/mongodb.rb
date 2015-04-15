@@ -40,7 +40,7 @@ class Chef::ResourceDefinitionList::MongoDB
       connection = nil
       rescue_connection_failure do
         if node['mongodb']['config']['auth']
-          connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+          connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         else
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
         end
@@ -106,7 +106,7 @@ class Chef::ResourceDefinitionList::MongoDB
       server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')
       begin
         if node['mongodb']['config']['auth']
-          connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+          connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         else
           connection = Mongo::Connection.new(server, port, :op_timeout => 5, :slave_ok => true)
         end
@@ -152,7 +152,7 @@ class Chef::ResourceDefinitionList::MongoDB
         rescue Mongo::ConnectionFailure
           # reconfiguring destroys existing connections, reconnect
           if node['mongodb']['config']['auth']
-            connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+            connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
           else
             connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           end
@@ -201,7 +201,7 @@ class Chef::ResourceDefinitionList::MongoDB
         rescue Mongo::ConnectionFailure
           # reconfiguring destroys existing connections, reconnect
           if node['mongodb']['config']['auth']
-            connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+            connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
           else
             connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           end
@@ -253,7 +253,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
     begin
       if node['mongodb']['config']['auth']
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
       else
         connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5)
       end
@@ -288,7 +288,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
     begin
       if node['mongodb']['config']['auth']
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true).db('admin').authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
       else
         connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5)
       end
