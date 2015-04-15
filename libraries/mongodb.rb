@@ -44,7 +44,6 @@ class Chef::ResourceDefinitionList::MongoDB
         else
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
         end
-        connection.database_names # check connection
       end
     rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
@@ -140,7 +139,6 @@ class Chef::ResourceDefinitionList::MongoDB
         rs_connection = nil
         rescue_connection_failure do
           rs_connection = Mongo::ReplSetConnection.new(old_members)
-          rs_connection.database_names # check connection
         end
 
         admin = rs_connection['admin']
@@ -187,7 +185,6 @@ class Chef::ResourceDefinitionList::MongoDB
         rs_connection = nil
         rescue_connection_failure do
           rs_connection = Mongo::ReplSetConnection.new(old_members)
-          rs_connection.database_names # check connection
         end
 
         admin = rs_connection['admin']
