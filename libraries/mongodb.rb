@@ -44,12 +44,12 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         rescue ::Mongo::AuthenticationError
-          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
         end
       end
 
     rescue ::Mongo::ConnectionFailure
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}' ")
     end
 
     # Want the node originating the connection to be included in the replicaset
@@ -113,12 +113,12 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         rescue ::Mongo::AuthenticationError
-          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
         end
       end
 
     rescue ::Mongo::ConnectionFailure
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}' ")
     end
 
       # check if both configs are the same
@@ -164,7 +164,7 @@ class Chef::ResourceDefinitionList::MongoDB
             begin
               admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
             rescue ::Mongo::AuthenticationError
-              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
             end
           end
 
@@ -204,7 +204,7 @@ class Chef::ResourceDefinitionList::MongoDB
             begin
               admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
             rescue ::Mongo::AuthenticationError
-              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
             end
           end
         end
@@ -224,7 +224,7 @@ class Chef::ResourceDefinitionList::MongoDB
             begin
               admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
             rescue ::Mongo::AuthenticationError
-              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+              Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
             end
           end
 
@@ -284,12 +284,12 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         rescue ::Mongo::AuthenticationError
-          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
         end
       end
 
     rescue ::Mongo::ConnectionFailure
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}' ")
     end
 
     shard_members.each do |shard|
@@ -322,12 +322,12 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
         rescue ::Mongo::AuthenticationError
-          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
         end
       end
 
     rescue ::Mongo::ConnectionFailure
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason: #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}' ")
     end
 
     databases = sharded_collections.keys.map { |x| x.split('.').first }.uniq
