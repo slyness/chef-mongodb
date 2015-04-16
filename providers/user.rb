@@ -31,8 +31,12 @@ def add_user(username, password, roles = [], database)
 
   # Create the user if they don't exist
   # Update the user if they already exist
-  db.add_user(username, password, false, :roles => roles)
-  Chef::Log.info("Created or updated user #{username} on #{database}")
+  if db.isMaster().ismaster
+    db.add_user(username, password, false, :roles => roles)
+    Chef::Log.info("Created or updated user #{username} on #{database}")
+  else
+    Chef::Log.info("This host is not the master")
+  end
 end
 
 # Drop a user from the database specified
