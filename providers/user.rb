@@ -31,7 +31,8 @@ def add_user(username, password, roles = [], database)
 
   # Create the user if they don't exist
   # Update the user if they already exist
-  if db.isMaster().ismaster
+  is_master = admin.command({'isMaster'=>1})
+  if is_master['ismaster']
     db.add_user(username, password, false, :roles => roles)
     Chef::Log.info("Created or updated user #{username} on #{database}")
   else
@@ -50,11 +51,16 @@ def delete_user(username, database)
 
   admin.authenticate(@new_resource.connection['admin']['username'], @new_resource.connection['admin']['password'])
 
-  if user_exists?(username, connection)
-    db.remove_user(username)
-    Chef::Log.info("Deleted user #{username} on #{database}")
+  is_master = admin.command({'isMaster'=>1})
+  if is_master['ismaster']
+    if user_exists?(username, connection)
+     db.remove_user(username)
+     Chef::Log.info("Deleted user #{username} on #{database}")
+    else
+      Chef::Log.warn("Unable to delete non-existent user #{username} on #{database}")
+    end
   else
-    Chef::Log.warn("Unable to delete non-existent user #{username} on #{database}")
+    Chef::Log.info("This host is not the master")
   end
 end
 
