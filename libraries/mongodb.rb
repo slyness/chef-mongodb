@@ -164,11 +164,23 @@ class Chef::ResourceDefinitionList::MongoDB
         cmd['replSetReconfig'] = config
         result = nil
         begin
-          result = admin.command(cmd, :check_response => false)
+          is_master = admin.command({'isMaster'=>1})
+          if is_master['ismaster']
+            result = admin.command(cmd, :check_response => false)
+            Chef::Log.info("The replica set is updated")
+          else
+            Chef::Log.info("This host is not the master")
+          end
+
         rescue Mongo::ConnectionFailure
 
-          connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-          admin = connection['admin']
+          connection = ::Mongo::MongoClient.new(
+                        'localhost',
+                        node['mongodb']['config']['port'],
+                        :op_timeout => 5,
+                        :slave_ok => true
+                      )
+          admin = connection.db('admin')
 
           if node['mongodb']['config']['auth']
             begin
@@ -224,7 +236,13 @@ class Chef::ResourceDefinitionList::MongoDB
 
         result = nil
         begin
-          result = admin.command(cmd, :check_response => false)
+          is_master = admin.command({'isMaster'=>1})
+          if is_master['ismaster']
+            result = admin.command(cmd, :check_response => false)
+            Chef::Log.info("The replica set is updated")
+          else
+            Chef::Log.info("This host is not the master")
+          end
         rescue Mongo::ConnectionFailure
 
           connection = ::Mongo::MongoClient.new(
@@ -245,7 +263,6 @@ class Chef::ResourceDefinitionList::MongoDB
 
           config = connection['local']['system']['replset'].find_one('_id' => name)
 
-          config = connection['local']['system']['replset'].find_one('_id' => name)
           # Validate configuration change
           if config['members'] == rs_members
             Chef::Log.info("New config successfully applied: #{config.inspect}")
