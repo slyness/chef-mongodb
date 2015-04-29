@@ -436,6 +436,8 @@ class Chef::ResourceDefinitionList::MongoDB
 
   # Determine if host is Primary
   def self.is_primary
+    require 'rubygems'
+    require 'mongo'
     begin
       connection = ::Mongo::MongoClient.new(
                       'localhost',
