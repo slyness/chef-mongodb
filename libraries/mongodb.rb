@@ -111,6 +111,7 @@ class Chef::ResourceDefinitionList::MongoDB
         result = admin.command(cmd, :check_response => false)
       else
         Chef::Log.info("Replicaset is already initialized: State is: #{rs_status['myState']}")
+        result = nil
       end
     rescue ::Mongo::OperationTimeout
       Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
