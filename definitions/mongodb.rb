@@ -222,7 +222,7 @@ define :mongodb_instance,
        chef_environment:#{new_resource.replicaset.chef_environment}"
     )
 
-    if rs_nodes
+    if MongoDB.is_primary?
       ruby_block 'config_replicaset' do
         block do
           MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
@@ -234,6 +234,8 @@ define :mongodb_instance,
         block {}
         notifies :create, 'ruby_block[config_replicaset]'
       end
+    else
+      Chef::Log.info("Host is not primary skipping actions")
     end
   end
 

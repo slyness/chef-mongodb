@@ -433,4 +433,30 @@ class Chef::ResourceDefinitionList::MongoDB
       retry
     end
   end
+
+  # Determine if host is Primary
+  def self.is_primary
+    begin
+      connection = ::Mongo::MongoClient.new(
+                      'localhost',
+                      node['mongodb']['config']['port'],
+                      :op_timeout => 5,
+                      :slave_ok => true
+                  )
+      admin = connection.db('admin')
+
+      if node['mongodb']['config']['auth']
+        begin
+          admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+        rescue ::Mongo::AuthenticationError
+          Chef::Log.warn("Could not authenticate to database: 'localhost:#{node['mongodb']['config']['port']}' ")
+        end
+      end
+
+    rescue ::Mongo::ConnectionFailure
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}' ")
+    end
+    is_master = admin.command({'isMaster'=>1})
+    is_master['ismaster']
+  end
 end
