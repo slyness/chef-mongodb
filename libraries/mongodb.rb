@@ -37,8 +37,13 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     begin
-      connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-      admin = connection['admin']
+      connection = ::Mongo::MongoClient.new(
+                      'localhost',
+                      node['mongodb']['config']['port'],
+                      :op_timeout => 5,
+                      :slave_ok => true
+                  )
+      admin = connection.db('admin')
 
       if node['mongodb']['config']['auth']
         begin
@@ -106,8 +111,13 @@ class Chef::ResourceDefinitionList::MongoDB
       server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')
 
     begin
-      connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-      admin = connection['admin']
+      connection = ::Mongo::MongoClient.new(
+                      'localhost',
+                      node['mongodb']['config']['port'],
+                      :op_timeout => 5,
+                      :slave_ok => true
+                    )
+      admin = connection.db('admin')
 
       if node['mongodb']['config']['auth']
         begin
@@ -149,7 +159,7 @@ class Chef::ResourceDefinitionList::MongoDB
           rs_connection = ::Mongo::ReplSetConnection.new(old_members)
         end
 
-        admin = rs_connection['admin']
+        admin = rs_connection.db('admin')
         cmd = ::BSON::OrderedHash.new
         cmd['replSetReconfig'] = config
         result = nil
@@ -199,7 +209,7 @@ class Chef::ResourceDefinitionList::MongoDB
         rs_connection = nil
         rescue_connection_failure do
           rs_connection = ::Mongo::ReplSetConnection.new(old_members)
-          admin = rs_connection['admin']
+          admin = rs_connection.db('admin')
           if node['mongodb']['config']['auth']
             begin
               admin.authenticate(node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
@@ -217,8 +227,13 @@ class Chef::ResourceDefinitionList::MongoDB
           result = admin.command(cmd, :check_response => false)
         rescue Mongo::ConnectionFailure
 
-          connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-          admin = connection['admin']
+          connection = ::Mongo::MongoClient.new(
+                          'localhost',
+                          node['mongodb']['config']['port'],
+                          :op_timeout => 5,
+                          :slave_ok => true
+                        )
+          admin = connection.db('admin')
 
           if node['mongodb']['config']['auth']
             begin
@@ -277,8 +292,13 @@ class Chef::ResourceDefinitionList::MongoDB
     Chef::Log.info(shard_members.inspect)
 
     begin
-      connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-      admin = connection['admin']
+      connection = ::Mongo::MongoClient.new(
+                      'localhost',
+                      node['mongodb']['config']['port'],
+                      :op_timeout => 5,
+                      :slave_ok => true
+                    )
+      admin = connection.db('admin')
 
       if node['mongodb']['config']['auth']
         begin
@@ -315,8 +335,13 @@ class Chef::ResourceDefinitionList::MongoDB
     require 'mongo'
 
     begin
-      connection = ::Mongo::MongoClient.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-      admin = connection['admin']
+      connection = ::Mongo::MongoClient.new(
+                      'localhost',
+                      node['mongodb']['config']['port'],
+                      :op_timeout => 5,
+                      :slave_ok => true
+                    )
+      admin = connection.db('admin')
 
       if node['mongodb']['config']['auth']
         begin
