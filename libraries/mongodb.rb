@@ -100,7 +100,11 @@ class Chef::ResourceDefinitionList::MongoDB
     }
 
     begin
-      result = admin.command(cmd, :check_response => false)
+      if !rs_members.nil?
+        result = admin.command(cmd, :check_response => false)
+      else
+        Chef::Log.info("Can not run command with nil rs_members")
+      end
     rescue ::Mongo::OperationTimeout
       Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
       return
