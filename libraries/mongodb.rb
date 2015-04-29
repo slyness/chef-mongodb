@@ -106,15 +106,17 @@ class Chef::ResourceDefinitionList::MongoDB
     Chef::Log.info("Hey dummy, you're about to do something")
 
     begin
-      if !rs_members.nil?
+      rs_status = admin.command({'replSetGetStatus'=>1})
+      if rs_status['myState'] == 6
         result = admin.command(cmd, :check_response => false)
       else
-        Chef::Log.info("Can not run command with nil rs_members")
+        Chef::Log.info("Replicaset is already initialized: State is: #{rs_status['myState']}")
       end
     rescue ::Mongo::OperationTimeout
       Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
       return
     end
+
     if result.fetch('ok', nil) == 1
       # everything is fine, do nothing
     elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
