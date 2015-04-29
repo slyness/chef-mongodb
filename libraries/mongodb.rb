@@ -435,7 +435,7 @@ class Chef::ResourceDefinitionList::MongoDB
   end
 
   # Determine if host is Primary
-  def self.is_primary
+  def self.is_primary(node)
     require 'rubygems'
     require 'mongo'
     begin
