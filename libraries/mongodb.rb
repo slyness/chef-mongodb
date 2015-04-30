@@ -87,23 +87,17 @@ class Chef::ResourceDefinitionList::MongoDB
       "Configuring replicaset with members #{members.map { |n| n['hostname'] }.join(', ')}"
     )
 
-    Chef::Log.info("Hey dummy")
-
     rs_member_ips = []
     members.each_index do |n|
       port = members[n]['mongodb']['config']['port']
       rs_member_ips << { '_id' => n, 'host' => "#{members[n]['ipaddress']}:#{port}" }
     end
 
-    Chef::Log.info("Hey dummy, something else happened")
-
     cmd = ::BSON::OrderedHash.new
     cmd['replSetInitiate'] = {
       '_id' => name,
       'members' => rs_members
     }
-
-    Chef::Log.info("Hey dummy, you're about to do something")
 
     begin
       rs_status = admin.command({'replSetGetStatus'=>1})
