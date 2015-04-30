@@ -118,8 +118,13 @@ class Chef::ResourceDefinitionList::MongoDB
       end
     rescue Mongo::OperationFailure
       begin
-        Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
-        result = admin.command(cmd, :check_response => false)
+        if members.size > 1
+          Chef::Log.info("Replicaset exists primary will add host on next converge")
+          result = { 'errmsg' => 'new host will be added by primary' }
+        else
+          Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
+          result = admin.command(cmd, :check_response => false)
+        end
       rescue Mongo::OperationTimeout
         Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
         return
