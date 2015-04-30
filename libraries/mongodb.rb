@@ -114,10 +114,17 @@ class Chef::ResourceDefinitionList::MongoDB
         Chef::Log.info("Replicaset is already initialized: State is: #{rs_status['myState']}")
         result = { 'errmsg' => 'already initialized' }
       else
+        result = { 'errmsg' => 'unknown status' }
+      end
+    rescue Mongo::OperationFailure
+      begin
         Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
         result = admin.command(cmd, :check_response => false)
+      rescue Mongo::OperationTimeout
+        Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
+        return
       end
-    rescue ::Mongo::OperationTimeout
+    rescue Mongo::OperationTimeout
       Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
       return
     end
