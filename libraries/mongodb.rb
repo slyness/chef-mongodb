@@ -108,10 +108,14 @@ class Chef::ResourceDefinitionList::MongoDB
     begin
       rs_status = admin.command({'replSetGetStatus'=>1})
       if rs_status['myState'] == 6
+        Chef::Log.info("Replicaset state is UNKNOWN initializing: State is: #{rs_status['myState']}")
         result = admin.command(cmd, :check_response => false)
-      else
+      elsif [0,1,2,3,4,5,7,8,9,10].include?(rs_status['myState'])
         Chef::Log.info("Replicaset is already initialized: State is: #{rs_status['myState']}")
         result = { 'errmsg' => 'already initialized' }
+      else
+        Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
+        result = admin.command(cmd, :check_response => false)
       end
     rescue ::Mongo::OperationTimeout
       Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
