@@ -26,15 +26,17 @@ require 'etc'
 
 execute "Make sure that data directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /data"
-  not_if { ::Etc.getpwuid(::File.stat("/data/admin.0").uid).name == "mongod" }
+  not_if { ::Etc.getpwuid(::File.stat("/data/admin.0").uid).name == node['mongodb']['user'] }
 end
 
 execute "Make sure that log directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /log"
+  not_if { ::Etc.getpwuid(::File.stat("/log/mongodb/mongodb.log").uid).name == node['mongodb']['user'] }
 end
 
 execute "Make sure that journal directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /journal"
+  not_if { ::Etc.getpwuid(::File.stat("/journal/prealloc.0").uid).name == node['mongodb']['user'] }
 end
 
 unless node['mongodb']['is_shard']
