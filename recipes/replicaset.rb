@@ -25,8 +25,8 @@ include_recipe 'mongodb::mongo_gem'
 require 'etc'
 
 execute "Make sure that data directory has correct permissions" do
-  command "chmod -R #{node['mongodb']['user']} #{node['mongodb']['dbpath']}"
-  not_if { ::Etc.getpwuid(::File.stat("#{node['mongodb']['dbpath']}/admin.0").uid).name == "mongod" }
+  command "chmod -R #{node['mongodb']['user']} /data"
+  not_if { ::Etc.getpwuid(::File.stat("/data/admin.0").uid).name == "mongod" }
 end
 
 execute "Make sure that log directory has correct permissions" do
