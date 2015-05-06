@@ -25,16 +25,16 @@ include_recipe 'mongodb::mongo_gem'
 require 'etc'
 
 execute "Make sure that data directory has correct permissions" do
-  command "chmod -R #{node['mongodb']['user']} /data"
+  command "chown -R #{node['mongodb']['user']} /data"
   not_if { ::Etc.getpwuid(::File.stat("/data/admin.0").uid).name == "mongod" }
 end
 
 execute "Make sure that log directory has correct permissions" do
-  command "chmod -R #{node['mongodb']['user']} /log"
+  command "chown -R #{node['mongodb']['user']} /log"
 end
 
 execute "Make sure that journal directory has correct permissions" do
-  command "chmod -R #{node['mongodb']['user']} /journal"
+  command "chown -R #{node['mongodb']['user']} /journal"
 end
 
 unless node['mongodb']['is_shard']
