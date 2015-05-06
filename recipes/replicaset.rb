@@ -24,19 +24,37 @@ include_recipe 'mongodb::install'
 include_recipe 'mongodb::mongo_gem'
 require 'etc'
 
+if ::File.stat("/data/admin.0").uid == 220
+  data_uid = 0
+else
+  data_uid = ::File.stat("/data/admin.0").uid
+end
+
 execute "Make sure that data directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /data"
-  not_if { ::Etc.getpwuid(::File.stat("/data/admin.0").uid).name == node['mongodb']['user'] }
+  not_if { ::Etc.getpwuid(data_uid).name == node['mongodb']['user'] }
+end
+
+if ::File.stat("/log/mongodb/mongodb.log").uid == 220
+  log_uid = 0
+else
+  log_uid = ::File.stat("/log/mongodb/mongodb.log").uid
 end
 
 execute "Make sure that log directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /log"
-  not_if { ::Etc.getpwuid(::File.stat("/log/mongodb/mongodb.log").uid).name == node['mongodb']['user'] }
+  not_if { ::Etc.getpwuid(log_uid).name == node['mongodb']['user'] }
+end
+
+if ::File.stat("/journal/prealloc.0").uid == 220
+  journal_uid = 0
+else
+  journal_uid = ::File.stat("/journal/prealloc.0").uid
 end
 
 execute "Make sure that journal directory has correct permissions" do
   command "chown -R #{node['mongodb']['user']} /journal"
-  not_if { ::Etc.getpwuid(::File.stat("/journal/prealloc.0").uid).name == node['mongodb']['user'] }
+  not_if { ::Etc.getpwuid(journal_uid).name == node['mongodb']['user'] }
 end
 
 unless node['mongodb']['is_shard']
