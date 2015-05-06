@@ -24,10 +24,12 @@ include_recipe 'mongodb::install'
 include_recipe 'mongodb::mongo_gem'
 require 'etc'
 
-if ::File.stat("/data/admin.0").uid == 220
-  data_uid = 0
-else
-  data_uid = ::File.stat("/data/admin.0").uid
+if ::File.exist?("/data/admin.0")
+  if ::File.stat("/data/admin.0").uid == 220
+    data_uid = 0
+  else
+    data_uid = ::File.stat("/data/admin.0").uid
+  end
 end
 
 execute "Make sure that data directory has correct permissions" do
@@ -35,10 +37,12 @@ execute "Make sure that data directory has correct permissions" do
   not_if { ::Etc.getpwuid(data_uid).name == node['mongodb']['user'] }
 end
 
-if ::File.stat("/log/mongodb/mongodb.log").uid == 220
-  log_uid = 0
-else
-  log_uid = ::File.stat("/log/mongodb/mongodb.log").uid
+if ::File.exist?("/log/mongodb/mongodb.log")
+  if ::File.stat("/log/mongodb/mongodb.log").uid == 220
+    log_uid = 0
+  else
+    log_uid = ::File.stat("/log/mongodb/mongodb.log").uid
+  end
 end
 
 execute "Make sure that log directory has correct permissions" do
@@ -46,10 +50,12 @@ execute "Make sure that log directory has correct permissions" do
   not_if { ::Etc.getpwuid(log_uid).name == node['mongodb']['user'] }
 end
 
-if ::File.stat("/journal/prealloc.0").uid == 220
-  journal_uid = 0
-else
-  journal_uid = ::File.stat("/journal/prealloc.0").uid
+if ::File.exist?("/journal/prealloc.0")
+  if ::File.stat("/journal/prealloc.0").uid == 220
+    journal_uid = 0
+  else
+    journal_uid = ::File.stat("/journal/prealloc.0").uid
+  end
 end
 
 execute "Make sure that journal directory has correct permissions" do
