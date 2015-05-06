@@ -30,11 +30,11 @@ if ::File.exist?("/data/admin.0")
   else
     data_uid = ::File.stat("/data/admin.0").uid
   end
-end
 
-execute "Make sure that data directory has correct permissions" do
-  command "chown -R #{node['mongodb']['user']} /data"
-  not_if { ::Etc.getpwuid(data_uid).name == node['mongodb']['user'] }
+  execute "Make sure that data directory has correct permissions" do
+    command "chown -R #{node['mongodb']['user']} /data"
+    not_if { ::Etc.getpwuid(data_uid).name == node['mongodb']['user'] }
+  end
 end
 
 if ::File.exist?("/log/mongodb/mongodb.log")
@@ -43,11 +43,11 @@ if ::File.exist?("/log/mongodb/mongodb.log")
   else
     log_uid = ::File.stat("/log/mongodb/mongodb.log").uid
   end
-end
 
-execute "Make sure that log directory has correct permissions" do
-  command "chown -R #{node['mongodb']['user']} /log"
-  not_if { ::Etc.getpwuid(log_uid).name == node['mongodb']['user'] }
+  execute "Make sure that log directory has correct permissions" do
+    command "chown -R #{node['mongodb']['user']} /log"
+    not_if { ::Etc.getpwuid(log_uid).name == node['mongodb']['user'] }
+  end
 end
 
 if ::File.exist?("/journal/prealloc.0")
@@ -56,11 +56,11 @@ if ::File.exist?("/journal/prealloc.0")
   else
     journal_uid = ::File.stat("/journal/prealloc.0").uid
   end
-end
 
-execute "Make sure that journal directory has correct permissions" do
-  command "chown -R #{node['mongodb']['user']} /journal"
-  not_if { ::Etc.getpwuid(journal_uid).name == node['mongodb']['user'] }
+  execute "Make sure that journal directory has correct permissions" do
+    command "chown -R #{node['mongodb']['user']} /journal"
+    not_if { ::Etc.getpwuid(journal_uid).name == node['mongodb']['user'] }
+  end
 end
 
 unless node['mongodb']['is_shard']
