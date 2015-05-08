@@ -74,3 +74,7 @@ unless node['mongodb']['is_shard']
     smallfiles   node['mongodb']['config']['smallfiles']
   end
 end
+
+service node['mongodb']['instance_name'] do
+  action :nothing
+end

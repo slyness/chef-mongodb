@@ -112,8 +112,8 @@ class Chef::ResourceDefinitionList::MongoDB
       end
     rescue Mongo::OperationFailure
       begin
-        if members.size > 1
-          Chef::Log.info("Replicaset exists primary will add host on next converge")
+        if members.size >= 1
+          Chef::Log.info("Replicaset exists. Primary will add host on next converge")
           result = { 'errmsg' => 'new host will be added by primary' }
         else
           Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
@@ -129,6 +129,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     if result.fetch('ok', nil) == 1
+      Chef::Log.info('replSetInitiate command is successful')
       # everything is fine, do nothing
     elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
       server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')

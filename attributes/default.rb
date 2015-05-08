@@ -109,3 +109,5 @@ default['mongodb']['ruby_gems'] = {
   :mongo => '1.12.1',
   :bson_ext => nil
 }
+
+default['mongodb']['new_node'] = false
