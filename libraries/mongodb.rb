@@ -101,9 +101,14 @@ class Chef::ResourceDefinitionList::MongoDB
 
     begin
       rs_status = admin.command({'replSetGetStatus'=>1})
+
       if rs_status['myState'] == 6
         Chef::Log.info("Replicaset state is UNKNOWN initializing: State is: #{rs_status['myState']}")
-        result = admin.command(cmd, :check_response => false)
+        begin
+          result = admin.command(cmd, :check_response => false)
+        rescue
+          result = { 'errmsg' => 'unknown status' }
+        end
       elsif [0,1,2,3,4,5,7,8,9,10].include?(rs_status['myState'])
         Chef::Log.info("Replicaset is already initialized: State is: #{rs_status['myState']}")
         result = { 'errmsg' => 'already initialized' }
