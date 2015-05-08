@@ -119,6 +119,16 @@ class Chef::ResourceDefinitionList::MongoDB
       begin
         if members.size >= 1
           Chef::Log.info("Result status: Replicaset may not exists.")
+          initialize = ::BSON::OrderedHash.new
+          initialize = {
+            '_id' => name,
+            'members' => [{}]
+          }
+          begin
+            admin.command(initialize)
+            Chef::Log.info("Result status: Attempting to Initialize a repicate set.")
+          rescue
+          end
           result = { 'errmsg' => 'new host will be added by primary' }
         else
           Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
