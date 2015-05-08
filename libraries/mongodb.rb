@@ -118,7 +118,7 @@ class Chef::ResourceDefinitionList::MongoDB
     rescue Mongo::OperationFailure
       begin
         if members.size >= 1
-          Chef::Log.info("Replicaset exists. Primary will add host on next converge")
+          Chef::Log.info("Result status: Replicaset may not exists.")
           result = { 'errmsg' => 'new host will be added by primary' }
         else
           Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
