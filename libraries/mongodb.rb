@@ -122,7 +122,11 @@ class Chef::ResourceDefinitionList::MongoDB
           result = { 'errmsg' => 'new host will be added by primary' }
         else
           Chef::Log.info("Replicaset state is EMPTYCONFIG initializing")
-          result = admin.command(cmd, :check_response => false)
+          begin
+            result = admin.command(cmd, :check_response => false)
+          rescue
+            Chef::Log.info("Can not Initialize database")
+          end
         end
       rescue Mongo::OperationTimeout
         Chef::Log.info('Started configuring the replicaset, this will take some time, another run should run smoothly')
@@ -267,8 +271,13 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           is_master = admin.command({'isMaster'=>1})
           if is_master['ismaster']
-            result = admin.command(cmd, :check_response => false)
-            Chef::Log.info("The replica set is updated")
+            begin
+              result = admin.command(cmd, :check_response => false)
+              Chef::Log.info("The replica set is updated")
+            rescue
+              Chef::Log.info("Unable to update replica set")
+              return
+            end
           else
             Chef::Log.info("This host is not the master")
           end
